@@ -30,45 +30,41 @@ if __name__ == '__main__':
     # read an TM via stdin. See parser.py for details on the returned object
     lines = parseInput()
 
-    # new states in new PTM can be 10-100 (not more than 100 states)
-    new_states = []
-    for i in range(11,100):
-        new_states.append(str(i))
+    right_old_states = []
+    left_old_states = []
+      
+    #If a 0 is written, check move instruction and move to next 0
+    for line in lines: 
+        if line[2] == '0' and line[3] == 'R':
+            right_old_states.append(line[4])
+            #send to portal state (right)
+            line[4] = '10'
+        if line[2] == '0' and line[3] == 'L':
+            left_old_states.append(line[4])
+            #send to portal state (left)
+            line[4] = '12'
     
-    #keep track of how many new states have been made
-    curr_new_state = 0
-                            
-    # Put your code here:
-
-    # add instructions to convert 0s to Xs
-    zeros_to_Xs = [
-        ['0', '0', 'X', 'R', '0'],
-        ['0', '*', '*', 'R', '0'],
-        ['0', '_', '_', 'L', '10'],
-        ['10', '*', '*', 'L', '10'],
-        ['10', '_', '_', 'R', '11']
+    right_portal = [
+        ['10', '*', '*', 'R', '10'],
+        ['10', '_', '_', 'L', '11'],
+        ['11', '*', '*', 'L', '11'],
+        ['11', '_', '_', 'R', '10'],
     ]
 
-    for line in lines:
-        #change start state
-        if line[0] == '0':
-            line[0] = new_states[curr_new_state]
-        if line [4] == '0':
-            line[4] = new_states[curr_new_state]
+    left_portal = [
+        ['12', '*', '*', 'R', '12'],
+        ['12', '_', '_', 'L', '13'],
+        ['13', '*', '*', 'L', '13'],
+        ['13', '_', '_', 'R', '12'],
+    ]
 
-    curr_new_state += 1
-
+    for i in right_old_states:
+        right_portal.append(['10', '0', '0', '*', i])
+    
+    for i in left_old_states:
+        left_portal.append(['10', '0', '0', '*', i])
         
-        
+    lines = lines + right_portal + left_portal
 
-    for line in lines:
-        # replace all 0s with Xs in instructions
-        if line[1] == '0':
-            line[1] = 'X'
-        if line[2] == '0':
-            line[2] == 'X'
-
-
-    lines = zeros_to_Xs + lines
     # if you use the same data structure, you can use:
     printTM()
