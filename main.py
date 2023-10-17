@@ -58,12 +58,16 @@ if __name__ == '__main__':
 
     curr_new_state += 1
 
+        
+        
+
     for line in lines:
         # replace all 0s with Xs in instructions
         if line[1] == '0':
             line[1] = 'X'
         if line[2] == '0':
             line[2] == 'X'
+
 
     lines = zeros_to_Xs + lines
     # if you use the same data structure, you can use:
